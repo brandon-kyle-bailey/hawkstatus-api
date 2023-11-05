@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    user: postgres
+    environment:
+      - POSTGRES_DB=hawkstatus
+      - POSTGRES_USERNAME=hawkstatus
+      - POSTGRES_USER=hawkstatus
+      - POSTGRES_PASSWORD=hawkstatus
+    ports:
+      - 5432:5432
+  smtp:
+    restart: always
+    image: jcalonso/mailhog:latest
+    logging:
+      driver: 'none'
+    ports:
+      - 1025:1025
+      - 8025:8025
