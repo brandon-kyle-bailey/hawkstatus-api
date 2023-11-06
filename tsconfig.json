@@ -1,5 +1,17 @@
 {
   "compilerOptions": {
+    "lib": ["es2020", "dom"],
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
+    "inlineSources": true,
+    "strictPropertyInitialization": false,
+    "typeRoots": ["./node_modules/@types"],
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -12,8 +24,6 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
@@ -21,5 +31,6 @@
       "@app/common": ["libs/common"],
       "@app/common/*": ["libs/common/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "cdk.out"]
 }

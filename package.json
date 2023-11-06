@@ -5,6 +5,9 @@
   "author": "brandon-kyle-bailey",
   "private": true,
   "license": "UNLICENSED",
+  "bin": {
+    "cdk": "bin/cdk.js"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
@@ -19,7 +22,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "generate:migration": "npx typeorm migration:create",
-    "start:infrastructure": "docker compose up -d"
+    "start:infrastructure": "docker compose up -d",
+    "cdk": "cdk"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.9.1",
@@ -49,9 +53,13 @@
     "rxjs": "^7.8.1",
     "stripe": "^14.3.0",
     "typeorm": "^0.3.17",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "aws-cdk-lib": "2.104.0",
+    "constructs": "^10.0.0",
+    "source-map-support": "^0.5.21"
   },
   "devDependencies": {
+    "aws-cdk": "2.104.0",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

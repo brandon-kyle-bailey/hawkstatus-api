@@ -1,6 +1,6 @@
 # compiled output
 /dist
-/node_modules
+node_modules
 
 # Logs
 logs
@@ -36,3 +36,12 @@ lerna-debug.log*
 
 # env files
 .env
+
+
+*.js
+!jest.config.js
+*.d.ts
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out

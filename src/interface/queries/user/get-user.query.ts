@@ -6,7 +6,7 @@ export class GetUserQuery extends QueryBase {
 
   private constructor(props: CommandProps<GetUserQuery>) {
     super();
-    this.id = props.id;
+    this.id = props.id!;
   }
 
   static create(props: GetUserQuery): GetUserQuery {
