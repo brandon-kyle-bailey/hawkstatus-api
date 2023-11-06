@@ -45,3 +45,6 @@ lerna-debug.log*
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+
+
+.build
