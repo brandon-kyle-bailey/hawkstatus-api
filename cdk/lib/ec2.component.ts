@@ -89,6 +89,7 @@ export class Ec2Component extends Construct {
     });
 
     this.instance.addUserData(fs.readFileSync('scripts/user-data.sh', 'utf8'));
+    // https://dev.to/emmanuelnk/part-4-wordpress-ec2-instance-in-asg-with-rds-database-and-alb-awesome-aws-cdk-3cij
 
     // cdk lets us output prperties of the resources we create after they are created
     // we want the ip address of this new instance so we can ssh into it later

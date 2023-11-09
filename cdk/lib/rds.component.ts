@@ -68,6 +68,7 @@ export class RdsComponent extends Construct {
       vpc: myVpc,
       vpcSubnets: { subnetType: SubnetType.PUBLIC },
       instanceType,
+      allocatedStorage: 30,
       engine,
       port: this.port,
       securityGroups: [dbSg],

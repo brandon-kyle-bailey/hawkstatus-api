@@ -3,28 +3,32 @@ import { MailerOptions } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 
-const config = configuration();
+const envConfig = configuration();
 
-export const emailConfig: MailerOptions = {
+export const config: MailerOptions = {
   transport: {
     host:
-      config.environment === 'development' ? config.smtp.host : config.ses.host,
+      envConfig.environment === 'development'
+        ? envConfig.smtp.host
+        : envConfig.ses.host,
     port:
-      config.environment === 'development' ? config.smtp.port : config.ses.port,
+      envConfig.environment === 'development'
+        ? envConfig.smtp.port
+        : envConfig.ses.port,
     secure: false,
     auth: {
       user:
-        config.environment === 'development'
-          ? config.smtp.user
-          : config.ses.user,
+        envConfig.environment === 'development'
+          ? envConfig.smtp.user
+          : envConfig.ses.user,
       pass:
-        config.environment === 'development'
-          ? config.smtp.password
-          : config.ses.password,
+        envConfig.environment === 'development'
+          ? envConfig.smtp.password
+          : envConfig.ses.password,
     },
   },
   defaults: {
-    from: config.smtp.default_from,
+    from: envConfig.smtp.default_from,
   },
   template: {
     dir: join(__dirname, 'templates'),
@@ -39,7 +43,7 @@ export const adapters = [
   {
     provide: 'smtp',
     useFactory: async () => {
-      return emailConfig;
+      return config;
     },
   },
 ];
