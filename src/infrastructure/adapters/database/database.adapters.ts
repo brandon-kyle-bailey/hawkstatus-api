@@ -9,13 +9,6 @@ const {
   },
 } = configuration();
 
-console.log(process.env.NODE_ENV);
-console.log('sync', process.env.NODE_ENV === 'development' ? true : false);
-console.log(
-  'migrationsRun',
-  process.env.NODE_ENV === 'development' ? false : true,
-);
-
 export const databaseConfiguration: PostgresConnectionOptions = {
   nativeDriver: 'pg',
   host,

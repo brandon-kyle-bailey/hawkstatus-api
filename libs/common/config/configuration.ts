@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export default () => ({
+  environment: process.env.NODE_ENV,
   web: {
     port: parseInt(process.env.PORT!, 10),
     secret: process.env.ACCESS_TOKEN_SECRET,
@@ -14,6 +15,12 @@ export default () => ({
     user: process.env.SMTP_USER,
     password: process.env.SMTP_PASSWORD,
     default_from: process.env.SMTP_DEFAULT_FROM,
+  },
+  ses: {
+    host: process.env.SES_HOST,
+    port: parseInt(process.env.SES_PORT!, 10),
+    user: process.env.SES_USER,
+    password: process.env.SES_PASSWORD,
   },
   database: {
     postgres: {
