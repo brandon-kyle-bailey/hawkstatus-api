@@ -30,6 +30,7 @@ import { SigninUserService } from './core/application/services/user/signin-user.
 import { UpdateUserService } from './core/application/services/user/update-user.service';
 import { SmtpModule } from './infrastructure/adapters/smtp/smtp.module';
 import { SendEmailService } from './core/application/services/notifications/send-email.service';
+import { HealthController } from './interface/controllers/health.http.controller';
 
 const {
   web: { secret, access_token_refresh },
@@ -80,6 +81,7 @@ const controllers = [
   CreateUserController,
   DeleteUserController,
   SigninUserController,
+  HealthController,
 ];
 const providers = [
   Logger,
