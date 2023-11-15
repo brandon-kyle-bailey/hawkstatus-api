@@ -5,6 +5,7 @@ export class UpdateUserCommand extends Command {
   readonly userId: AggregateID;
   readonly name?: string;
   readonly email?: string;
+  readonly phone?: string;
   readonly password?: string;
   readonly verified?: boolean;
 
@@ -13,6 +14,7 @@ export class UpdateUserCommand extends Command {
     this.userId = props.userId;
     this.name = props.name;
     this.email = props.email;
+    this.phone = props.phone;
     this.password = props.password;
     this.verified = props.verified;
   }

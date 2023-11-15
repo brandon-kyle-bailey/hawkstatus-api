@@ -10,6 +10,7 @@ import {
 export interface UserEntityProps {
   readonly name: string;
   readonly email: string;
+  readonly phone?: string;
   readonly verified: boolean;
   readonly password: string;
 }
@@ -36,6 +37,9 @@ export class UserRepositoryEntity {
 
   @Column()
   email: string;
+
+  @Column({ nullable: true })
+  phone?: string;
 
   @Column({ default: false })
   verified: boolean;

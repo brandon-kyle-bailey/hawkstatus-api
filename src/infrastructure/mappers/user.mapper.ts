@@ -2,10 +2,7 @@ import { Mapper } from '@app/common/ddd/mapper.base';
 import { Injectable } from '@nestjs/common';
 import { UserRepositoryEntity } from 'src/core/application/ports/user/user.entity';
 import { UserEntity } from 'src/core/domain/entities/user.entity';
-import {
-  UserResponseDto,
-  UserTokenResponseDto,
-} from 'src/interface/dtos/user/user.response.dto';
+import { UserResponseDto } from 'src/interface/dtos/user/user.response.dto';
 
 @Injectable()
 export class UserMapper
@@ -23,6 +20,7 @@ export class UserMapper
       deletedAt: copy.deletedAt,
       name: copy.name,
       email: copy.email,
+      phone: copy.phone,
       verified: copy.verified,
       password: copy.password,
     };
@@ -41,9 +39,9 @@ export class UserMapper
       props: {
         name: record.name,
         email: record.email,
+        phone: record.phone,
         password: record.password,
         verified: record.verified,
-        token: undefined,
       },
     });
     return entity;
@@ -58,13 +56,7 @@ export class UserMapper
     const response = new UserResponseDto(entity);
     response.name = props.name;
     response.email = props.email;
-    if (props.token) {
-      const tokenResponse = new UserTokenResponseDto();
-      const { access_token, refresh_token } = props.token.unpack();
-      tokenResponse.access_token = access_token;
-      tokenResponse.refresh_token = refresh_token;
-      response.token = tokenResponse;
-    }
+    response.phone = props.phone;
     return response;
   }
 }

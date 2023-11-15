@@ -22,6 +22,7 @@ export class CreateUserService implements ICommandHandler {
       const user = UserEntity.create({
         name: command.name,
         email: command.email,
+        phone: command.phone,
         password: command.password,
         verified: false,
       });

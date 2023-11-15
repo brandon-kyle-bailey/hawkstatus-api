@@ -6,7 +6,6 @@ import { UserTokenValueObject } from 'src/core/domain/value-objects/user-token.v
 import { RefreshUserTokenCommand } from 'src/interface/commands/user/refresh-user-token.command';
 import { UserRepository } from '../../ports/user/user.repository';
 import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { UserEntity } from 'src/core/domain/entities/user.entity';
 
 const {
   web: { secret, refresh_token_refresh },
@@ -20,8 +19,9 @@ export class RefreshUserTokenService implements ICommandHandler {
     @Inject(UserRepository)
     private readonly repo: UserRepositoryPort,
   ) {}
-  async execute(command: RefreshUserTokenCommand): Promise<UserEntity> {
-    this.logger.debug(`RefreshUserTokenService.execute called with`, command);
+  async execute(
+    command: RefreshUserTokenCommand,
+  ): Promise<UserTokenValueObject> {
     try {
       const rawPayload = await this.service.verifyAsync(command.refresh_token, {
         secret,
@@ -45,13 +45,7 @@ export class RefreshUserTokenService implements ICommandHandler {
         access_token,
         refresh_token,
       });
-      return UserEntity.create(
-        {
-          ...user.getProps(),
-          token,
-        },
-        user.id,
-      );
+      return token;
     } catch (error) {
       this.logger.error(
         'RefreshUserTokenService.execute encountered an error',

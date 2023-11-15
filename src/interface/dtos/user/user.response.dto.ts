@@ -8,5 +8,5 @@ export class UserTokenResponseDto {
 export class UserResponseDto extends ResponseBase {
   name: string;
   email: string;
-  token?: UserTokenResponseDto;
+  phone: string;
 }

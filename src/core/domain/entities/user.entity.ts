@@ -6,21 +6,20 @@ import {
 } from '@app/common/ddd/domain-event.base';
 import { AggregateID } from '@app/common/ddd/entity.base';
 import { AggregateRoot } from '@app/common/ddd/aggregate-root.base';
-import { UserTokenValueObject } from '../value-objects/user-token.value-object';
 
 export class UserCreatedDomainEvent extends DomainEvent {
   readonly userId: AggregateID;
   readonly name: string;
   readonly email: string;
+  readonly phone?: string;
   readonly password: string;
-  readonly token?: UserTokenValueObject;
   constructor(props: DomainEventProps<UserCreatedDomainEvent>) {
     super(props);
     this.userId = props.userId;
     this.name = props.name;
     this.email = props.email;
+    this.phone = props.phone;
     this.password = props.password;
-    this.token = props.token;
   }
 }
 
@@ -40,9 +39,9 @@ export class UserUpdatedDomainEvent extends DomainEvent {
 export interface UserProps {
   name: string;
   email: string;
+  phone?: string;
   verified: boolean;
   password: string;
-  token?: UserTokenValueObject;
 }
 
 // Properties that are needed for a User creation
