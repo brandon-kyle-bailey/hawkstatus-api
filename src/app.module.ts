@@ -31,14 +31,56 @@ import { UpdateUserService } from './core/application/services/user/update-user.
 import { SmtpModule } from './infrastructure/adapters/smtp/smtp.module';
 import { SendEmailService } from './core/application/services/notifications/send-email.service';
 import { HealthController } from './interface/controllers/health.http.controller';
+import { IncidentRepositoryEntity } from './core/application/ports/incident/incident.entity';
+import { IntegrationRepositoryEntity } from './core/application/ports/integration/integration.entity';
+import { ServiceCheckResultRepositoryEntity } from './core/application/ports/service-check-result/service-check-result.entity';
+import { ServiceCheckRepositoryEntity } from './core/application/ports/service-check/service-check.entity';
+import { WorkspaceMembershipRepositoryEntity } from './core/application/ports/workspace-membership/workspace-membership.entity';
+import { WorkspaceRepositoryEntity } from './core/application/ports/workspace/workspace.entity';
+import { IncidentRepository } from './core/application/ports/incident/incident.repository';
+import { IntegrationRepository } from './core/application/ports/integration/integration.repository';
+import { ServiceCheckResultRepository } from './core/application/ports/service-check-result/service-check-result.repository';
+import { ServiceCheckRepository } from './core/application/ports/service-check/service-check.repository';
+import { WorkspaceMembershipRepository } from './core/application/ports/workspace-membership/workspace-membership.repository';
+import { WorkspaceRepository } from './core/application/ports/workspace/workspace.repository';
+import { IncidentMapper } from './infrastructure/mappers/incident.mapper';
+import { IntegrationMapper } from './infrastructure/mappers/integration.mapper';
+import { ServiceCheckMapper } from './infrastructure/mappers/servce-check.mapper';
+import { ServiceCheckResultMapper } from './infrastructure/mappers/service-check-result.mapper';
+import { WorkspaceMembershipMapper } from './infrastructure/mappers/workspace-membership.mapper';
+import { WorkspaceMapper } from './infrastructure/mappers/workspace.mapper';
 
 const {
   web: { secret, access_token_refresh },
 } = configuration();
 
-const entities = [UserRepositoryEntity];
-const repositories = [UserRepository];
-const mappers = [UserMapper];
+const entities = [
+  UserRepositoryEntity,
+  WorkspaceRepositoryEntity,
+  WorkspaceMembershipRepositoryEntity,
+  IntegrationRepositoryEntity,
+  IncidentRepositoryEntity,
+  ServiceCheckRepositoryEntity,
+  ServiceCheckResultRepositoryEntity,
+];
+const repositories = [
+  UserRepository,
+  WorkspaceRepository,
+  WorkspaceMembershipRepository,
+  IntegrationRepository,
+  IncidentRepository,
+  ServiceCheckRepository,
+  ServiceCheckResultRepository,
+];
+const mappers = [
+  UserMapper,
+  WorkspaceMapper,
+  WorkspaceMembershipMapper,
+  IntegrationMapper,
+  IncidentMapper,
+  ServiceCheckMapper,
+  ServiceCheckResultMapper,
+];
 const services = [
   CreateUserTokenService,
   VerifyUserTokenService,
