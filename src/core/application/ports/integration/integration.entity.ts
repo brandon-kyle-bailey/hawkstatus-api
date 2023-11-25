@@ -1,3 +1,4 @@
+import { AggregateID } from '@app/common/ddd/entity.base';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,7 +8,11 @@ import {
   Column,
 } from 'typeorm';
 
-export interface IntegrationEntityProps {}
+export interface IntegrationEntityProps {
+  ownerId: AggregateID;
+  type: string;
+  url?: string;
+}
 
 @Entity('integration')
 export class IntegrationRepositoryEntity {
@@ -25,4 +30,13 @@ export class IntegrationRepositoryEntity {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @Column('uuid')
+  ownerId: AggregateID;
+
+  @Column()
+  type: string;
+
+  @Column({ nullable: true })
+  url?: string;
 }

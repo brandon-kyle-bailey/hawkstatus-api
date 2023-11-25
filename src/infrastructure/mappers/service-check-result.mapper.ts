@@ -27,6 +27,10 @@ export class ServiceCheckResultMapper
       createdAt: copy.createdAt,
       updatedAt: copy.updatedAt,
       deletedAt: copy.deletedAt,
+      serviceCheckId: copy.serviceCheckId,
+      status: copy.status,
+      duration: copy.duration,
+      response: copy.response,
     };
     return record;
   }
@@ -45,10 +49,10 @@ export class ServiceCheckResultMapper
       updatedAt: new Date(record.updatedAt),
       deletedAt: record.deletedAt ? new Date(record.deletedAt) : undefined,
       props: {
-        serviceCheckId: '',
-        status: 0,
-        duration: 0,
-        response: '',
+        serviceCheckId: record.serviceCheckId,
+        status: record.status,
+        duration: record.duration,
+        response: record.response,
       },
     });
     return entity;
@@ -63,6 +67,10 @@ export class ServiceCheckResultMapper
   ): ServiceCheckResultResponseDto {
     const props = entity.getProps();
     const response = new ServiceCheckResultResponseDto(entity);
+    response.serviceCheckId = props.serviceCheckId;
+    response.status = props.status;
+    response.duration = props.duration;
+    response.response = props.response;
     return response;
   }
 }

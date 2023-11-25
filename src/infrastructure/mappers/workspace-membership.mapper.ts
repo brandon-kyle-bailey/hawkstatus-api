@@ -27,6 +27,8 @@ export class WorkspaceMembershipMapper
       createdAt: copy.createdAt,
       updatedAt: copy.updatedAt,
       deletedAt: copy.deletedAt,
+      workspaceId: copy.workspaceId,
+      userId: copy.userId,
     };
     return record;
   }
@@ -45,8 +47,8 @@ export class WorkspaceMembershipMapper
       updatedAt: new Date(record.updatedAt),
       deletedAt: record.deletedAt ? new Date(record.deletedAt) : undefined,
       props: {
-        workspaceId: '',
-        userId: '',
+        workspaceId: record.workspaceId,
+        userId: record.userId,
       },
     });
     return entity;
@@ -63,6 +65,8 @@ export class WorkspaceMembershipMapper
   ): WorkspaceMembershipResponseDto {
     const props = entity.getProps();
     const response = new WorkspaceMembershipResponseDto(entity);
+    response.workspaceId = props.workspaceId;
+    response.userId = props.userId;
     return response;
   }
 }

@@ -1,3 +1,4 @@
+import { AggregateID } from '@app/common/ddd/entity.base';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,7 +8,12 @@ import {
   Column,
 } from 'typeorm';
 
-export interface ServiceCheckResultEntityProps {}
+export interface ServiceCheckResultEntityProps {
+  serviceCheckId: AggregateID;
+  status: number;
+  duration: number;
+  response: string;
+}
 
 @Entity('servicecheckresult')
 export class ServiceCheckResultRepositoryEntity {
@@ -25,4 +31,16 @@ export class ServiceCheckResultRepositoryEntity {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @Column('uuid')
+  serviceCheckId: AggregateID;
+
+  @Column()
+  status: number;
+
+  @Column()
+  duration: number;
+
+  @Column()
+  response: string;
 }

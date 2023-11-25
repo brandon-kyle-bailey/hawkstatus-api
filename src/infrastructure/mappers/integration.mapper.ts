@@ -23,6 +23,8 @@ export class IntegrationMapper
       createdAt: copy.createdAt,
       updatedAt: copy.updatedAt,
       deletedAt: copy.deletedAt,
+      ownerId: copy.ownerId,
+      type: copy.type,
     };
     return record;
   }
@@ -37,8 +39,8 @@ export class IntegrationMapper
       updatedAt: new Date(record.updatedAt),
       deletedAt: record.deletedAt ? new Date(record.deletedAt) : undefined,
       props: {
-        ownerId: '',
-        type: '',
+        ownerId: record.ownerId,
+        type: record.type,
       },
     });
     return entity;
@@ -51,6 +53,8 @@ export class IntegrationMapper
   static toResponse(entity: IntegrationEntity): IntegrationResponseDto {
     const props = entity.getProps();
     const response = new IntegrationResponseDto(entity);
+    response.ownerId = props.ownerId;
+    response.type = props.type;
     return response;
   }
 }

@@ -1,6 +1,8 @@
 import { Mapper } from '@app/common/ddd/mapper.base';
 import { Injectable } from '@nestjs/common';
+import { WorkspaceRepositoryEntity } from 'src/core/application/ports/workspace/workspace.entity';
 import { WorkspaceEntity } from 'src/core/domain/entities/workspace.entity';
+import { WorkspaceResponseDto } from 'src/interface/dtos/workspace/workspace.response.dto';
 
 @Injectable()
 export class WorkspaceMapper
@@ -17,6 +19,8 @@ export class WorkspaceMapper
       createdAt: copy.createdAt,
       updatedAt: copy.updatedAt,
       deletedAt: copy.deletedAt,
+      ownerId: copy.ownerId,
+      name: copy.name,
     };
     return record;
   }
@@ -30,7 +34,10 @@ export class WorkspaceMapper
       createdAt: new Date(record.createdAt),
       updatedAt: new Date(record.updatedAt),
       deletedAt: record.deletedAt ? new Date(record.deletedAt) : undefined,
-      props: {},
+      props: {
+        ownerId: record.ownerId,
+        name: record.name,
+      },
     });
     return entity;
   }
@@ -42,6 +49,8 @@ export class WorkspaceMapper
   static toResponse(entity: WorkspaceEntity): WorkspaceResponseDto {
     const props = entity.getProps();
     const response = new WorkspaceResponseDto(entity);
+    response.name = props.name;
+    response.ownerId = props.ownerId;
     return response;
   }
 }

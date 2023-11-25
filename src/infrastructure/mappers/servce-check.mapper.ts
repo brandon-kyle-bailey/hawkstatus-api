@@ -25,6 +25,17 @@ export class ServiceCheckMapper
       createdAt: copy.createdAt,
       updatedAt: copy.updatedAt,
       deletedAt: copy.deletedAt,
+      ownerId: copy.ownerId,
+      name: copy.name,
+      url: copy.url,
+      interval: copy.interval,
+      timeout: copy.timeout,
+      alertCheckThreshold: copy.alertCheckThreshold,
+      method: copy.method,
+      body: copy.body,
+      headers: JSON.stringify(copy.headers),
+      status: copy.status,
+      type: copy.type,
     };
     return record;
   }
@@ -39,17 +50,17 @@ export class ServiceCheckMapper
       updatedAt: new Date(record.updatedAt),
       deletedAt: record.deletedAt ? new Date(record.deletedAt) : undefined,
       props: {
-        ownerId: '',
-        name: '',
-        url: '',
-        interval: 0,
-        timeout: 0,
-        alertCheckThreshold: 0,
-        method: '',
-        body: '',
-        headers: [],
-        status: '',
-        type: '',
+        ownerId: record.ownerId,
+        name: record.name,
+        url: record.url,
+        interval: record.interval,
+        timeout: record.timeout,
+        alertCheckThreshold: record.alertCheckThreshold,
+        method: record.method,
+        body: record.body,
+        headers: JSON.parse(record.headers),
+        status: record.status,
+        type: record.type,
       },
     });
     return entity;
@@ -62,6 +73,17 @@ export class ServiceCheckMapper
   static toResponse(entity: ServiceCheckEntity): ServiceCheckResponseDto {
     const props = entity.getProps();
     const response = new ServiceCheckResponseDto(entity);
+    response.ownerId = props.ownerId;
+    response.name = props.name;
+    response.url = props.url;
+    response.interval = props.interval;
+    response.timeout = props.timeout;
+    response.alertCheckThreshold = props.alertCheckThreshold;
+    response.method = props.method;
+    response.body = props.body;
+    response.headers = props.headers;
+    response.status = props.status;
+    response.type = props.type;
     return response;
   }
 }

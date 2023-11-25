@@ -1,3 +1,4 @@
+import { AggregateID } from '@app/common/ddd/entity.base';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,7 +8,10 @@ import {
   Column,
 } from 'typeorm';
 
-export interface WorkspaceEntityProps {}
+export interface WorkspaceEntityProps {
+  ownerId: AggregateID;
+  name: string;
+}
 
 @Entity('workspace')
 export class WorkspaceRepositoryEntity {
@@ -25,4 +29,10 @@ export class WorkspaceRepositoryEntity {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @Column('uuid')
+  ownerId: AggregateID;
+
+  @Column()
+  name: string;
 }

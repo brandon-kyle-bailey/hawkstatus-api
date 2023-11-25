@@ -19,6 +19,8 @@ export class IncidentMapper
       createdAt: copy.createdAt,
       updatedAt: copy.updatedAt,
       deletedAt: copy.deletedAt,
+      serviceCheckId: copy.serviceCheckId,
+      status: copy.status,
     };
     return record;
   }
@@ -33,8 +35,8 @@ export class IncidentMapper
       updatedAt: new Date(record.updatedAt),
       deletedAt: record.deletedAt ? new Date(record.deletedAt) : undefined,
       props: {
-        serviceCheckId: '',
-        status: '',
+        serviceCheckId: record.serviceCheckId,
+        status: record.status,
       },
     });
     return entity;
@@ -47,6 +49,8 @@ export class IncidentMapper
   static toResponse(entity: IncidentEntity): IncidentResponseDto {
     const props = entity.getProps();
     const response = new IncidentResponseDto(entity);
+    response.serviceCheckId = props.serviceCheckId;
+    response.status = props.status;
     return response;
   }
 }

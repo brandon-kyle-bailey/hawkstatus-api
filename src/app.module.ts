@@ -49,6 +49,31 @@ import { ServiceCheckMapper } from './infrastructure/mappers/servce-check.mapper
 import { ServiceCheckResultMapper } from './infrastructure/mappers/service-check-result.mapper';
 import { WorkspaceMembershipMapper } from './infrastructure/mappers/workspace-membership.mapper';
 import { WorkspaceMapper } from './infrastructure/mappers/workspace.mapper';
+import { CreateIncidentController } from './interface/controllers/incident/create-incident.http.controller';
+import { DeleteIncidentController } from './interface/controllers/incident/delete-incident.http.controller';
+import { GetIncidentController } from './interface/controllers/incident/get-incident.http.controller';
+import { ListIncidentController } from './interface/controllers/incident/list-incident.http.controller';
+import { UpdateIncidentController } from './interface/controllers/incident/update-incident.http.controller';
+import { CreateIntegrationController } from './interface/controllers/integration/create-integration.http.controller';
+import { DeleteIntegrationController } from './interface/controllers/integration/delete-integration.http.controller';
+import { GetIntegrationController } from './interface/controllers/integration/get-integration.http.controller';
+import { ListIntegrationController } from './interface/controllers/integration/list-integration.http.controller';
+import { UpdateIntegrationController } from './interface/controllers/integration/update-integration.http.controller';
+import { CreateServiceCheckResultController } from './interface/controllers/service-check-result/create-service-check-result.http.controller';
+import { DeleteServiceCheckResultController } from './interface/controllers/service-check-result/delete-service-check-result.http.controller';
+import { GetServiceCheckResultController } from './interface/controllers/service-check-result/get-service-check-result.http.controller';
+import { ListServiceCheckResultController } from './interface/controllers/service-check-result/list-service-check-result.http.controller';
+import { UpdateServiceCheckResultController } from './interface/controllers/service-check-result/update-service-check-result.http.controller';
+import { CreateServiceCheckController } from './interface/controllers/service-check/create-service-check.http.controller';
+import { DeleteServiceCheckController } from './interface/controllers/service-check/delete-service-check.http.controller';
+import { GetServiceCheckController } from './interface/controllers/service-check/get-service-check.http.controller';
+import { ListServiceCheckController } from './interface/controllers/service-check/list-service-check.http.controller';
+import { UpdateServiceCheckController } from './interface/controllers/service-check/update-service-check.http.controller';
+import { CreateWorkspaceController } from './interface/controllers/workspace/create-workspace.http.controller';
+import { DeleteWorkspaceController } from './interface/controllers/workspace/delete-workspace.http.controller';
+import { GetWorkspaceController } from './interface/controllers/workspace/get-workspace.http.controller';
+import { ListWorkspaceController } from './interface/controllers/workspace/list-workspace.http.controller';
+import { UpdateWorkspaceController } from './interface/controllers/workspace/update-workspace.http.controller';
 
 const {
   web: { secret, access_token_refresh },
@@ -124,6 +149,36 @@ const controllers = [
   DeleteUserController,
   SigninUserController,
   HealthController,
+
+  GetIncidentController,
+  UpdateIncidentController,
+  CreateIncidentController,
+  DeleteIncidentController,
+  ListIncidentController,
+
+  GetIntegrationController,
+  UpdateIntegrationController,
+  CreateIntegrationController,
+  DeleteIntegrationController,
+  ListIntegrationController,
+
+  GetWorkspaceController,
+  UpdateWorkspaceController,
+  CreateWorkspaceController,
+  DeleteWorkspaceController,
+  ListWorkspaceController,
+
+  GetServiceCheckController,
+  UpdateServiceCheckController,
+  CreateServiceCheckController,
+  DeleteServiceCheckController,
+  ListServiceCheckController,
+
+  GetServiceCheckResultController,
+  UpdateServiceCheckResultController,
+  CreateServiceCheckResultController,
+  DeleteServiceCheckResultController,
+  ListServiceCheckResultController,
 ];
 const providers = [
   Logger,
