@@ -1,29 +1,29 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntity } from '../../../domain/entities/user.entity';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { UpdateUserCommand } from 'src/interface/commands/user/update-user.command';
+import { IntegrationEntity } from 'src/core/domain/entities/integration.entity';
+import { UpdateIntegrationCommand } from 'src/interface/commands/integration/update-integration.command';
+import { IntegrationRepository } from '../../ports/integration/integration.repository';
+import { IntegrationRepositoryPort } from '../../ports/integration/integration.repository.port';
 
-@CommandHandler(UpdateUserCommand)
-export class UpdateUserService implements ICommandHandler {
+@CommandHandler(UpdateIntegrationCommand)
+export class UpdateIntegrationService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(IntegrationRepository)
+    protected readonly repo: IntegrationRepositoryPort,
   ) {}
-  async execute(command: UpdateUserCommand): Promise<UserEntity> {
+  async execute(command: UpdateIntegrationCommand): Promise<IntegrationEntity> {
     try {
-      let user: UserEntity;
+      let integration: IntegrationEntity;
       await this.repo.transaction(async () => {
-        user = await this.repo.findOneById(command.userId);
-        user.update(command);
-        this.repo.save(user);
+        integration = await this.repo.findOneById(command.integrationId);
+        integration.update(command);
+        this.repo.save(integration);
       });
-      return user;
+      return integration;
     } catch (error) {
       this.logger.error(
-        'UpdateUserService.execute encountered an error',
+        'UpdateIntegrationService.execute encountered an error',
         error,
       );
     }

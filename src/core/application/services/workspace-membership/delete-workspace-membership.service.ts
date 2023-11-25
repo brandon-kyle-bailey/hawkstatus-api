@@ -1,28 +1,30 @@
+import { AggregateID } from '@app/common/ddd/entity.base';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { AggregateID } from '@app/common/ddd/entity.base';
-import { DeleteUserCommand } from 'src/interface/commands/user/delete-user.command';
+import { DeleteWorkspaceMembershipCommand } from 'src/interface/commands/workspace-membership/delete-workspace-membership.command';
+import { WorkspaceMembershipRepository } from '../../ports/workspace-membership/workspace-membership.repository';
+import { WorkspaceMembershipRepositoryPort } from '../../ports/workspace-membership/workspace-membership.repository.port';
 
-@CommandHandler(DeleteUserCommand)
-export class DeleteUserService implements ICommandHandler {
+@CommandHandler(DeleteWorkspaceMembershipCommand)
+export class DeleteWorkspaceMembershipService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(WorkspaceMembershipRepository)
+    protected readonly repo: WorkspaceMembershipRepositoryPort,
   ) {}
-  async execute(command: DeleteUserCommand): Promise<AggregateID> {
+  async execute(
+    command: DeleteWorkspaceMembershipCommand,
+  ): Promise<AggregateID> {
     try {
       await this.repo.transaction(async () => {
-        const User = await this.repo.findOneById(command.id);
-        User.delete();
-        await this.repo.delete(User);
+        const workspaceMembership = await this.repo.findOneById(command.id);
+        workspaceMembership.delete();
+        await this.repo.delete(workspaceMembership);
       });
       return command.id;
     } catch (error) {
       this.logger.error(
-        'DeleteUserService.execute encountered an error',
+        'DeleteWorkspaceMembershipService.execute encountered an error',
         error,
       );
     }

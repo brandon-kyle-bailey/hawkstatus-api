@@ -1,29 +1,33 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntity } from '../../../domain/entities/user.entity';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { UpdateUserCommand } from 'src/interface/commands/user/update-user.command';
+import { ServiceCheckResultEntity } from 'src/core/domain/entities/service-check-result.entity';
+import { UpdateServiceCheckResultCommand } from 'src/interface/commands/service-check-result/update-service-check-result.command';
+import { ServiceCheckResultRepository } from '../../ports/service-check-result/service-check-result.repository';
+import { ServiceCheckResultRepositoryPort } from '../../ports/service-check-result/service-check-result.repository.port';
 
-@CommandHandler(UpdateUserCommand)
-export class UpdateUserService implements ICommandHandler {
+@CommandHandler(UpdateServiceCheckResultCommand)
+export class UpdateServiceCheckResultService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(ServiceCheckResultRepository)
+    protected readonly repo: ServiceCheckResultRepositoryPort,
   ) {}
-  async execute(command: UpdateUserCommand): Promise<UserEntity> {
+  async execute(
+    command: UpdateServiceCheckResultCommand,
+  ): Promise<ServiceCheckResultEntity> {
     try {
-      let user: UserEntity;
+      let serviceCheckResult: ServiceCheckResultEntity;
       await this.repo.transaction(async () => {
-        user = await this.repo.findOneById(command.userId);
-        user.update(command);
-        this.repo.save(user);
+        serviceCheckResult = await this.repo.findOneById(
+          command.serviceCheckResultId,
+        );
+        serviceCheckResult.update(command);
+        this.repo.save(serviceCheckResult);
       });
-      return user;
+      return serviceCheckResult;
     } catch (error) {
       this.logger.error(
-        'UpdateUserService.execute encountered an error',
+        'UpdateServiceCheckResultService.execute encountered an error',
         error,
       );
     }

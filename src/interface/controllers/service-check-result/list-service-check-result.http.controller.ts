@@ -19,13 +19,11 @@ export class ListServiceCheckResultController {
   async get(
     @Body() body: ListServiceCheckResultRequestDto,
     @Req() request: any,
-  ): Promise<ServiceCheckResultResponseDto> {
+  ): Promise<ServiceCheckResultResponseDto[]> {
     try {
-      const query = ListServiceCheckResultQuery.create({
-        id: body.id,
-      });
+      const query = ListServiceCheckResultQuery.create({});
       const result = await this.queryBus.execute(query);
-      const response = this.mapper.toResponse(result);
+      const response = result.map((res) => this.mapper.toResponse(res));
       return response;
     } catch (error) {
       this.logger.error(

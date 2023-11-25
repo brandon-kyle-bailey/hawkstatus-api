@@ -18,7 +18,10 @@ export class CreateIncidentController {
     @Body() body: CreateIncidentRequestDto,
   ): Promise<IncidentResponseDto> {
     try {
-      const command = CreateIncidentCommand.create(body);
+      const command = CreateIncidentCommand.create({
+        serviceCheckId: body.serviceCheckId,
+        status: 'ACTIVE',
+      });
       const result = await this.commandBus.execute(command);
       return this.mapper.toResponse(result);
     } catch (error) {

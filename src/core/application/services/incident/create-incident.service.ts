@@ -1,38 +1,30 @@
-import { ArgumentInvalidException } from '@app/common/exceptions/exceptions';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntity } from 'src/core/domain/entities/user.entity';
-import { CreateUserCommand } from 'src/interface/commands/user/create-user.command';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
+import { IncidentEntity } from 'src/core/domain/entities/incident.entity';
+import { CreateIncidentCommand } from 'src/interface/commands/incident/create-incident.command';
+import { IncidentRepository } from '../../ports/incident/incident.repository';
+import { IncidentRepositoryPort } from '../../ports/incident/incident.repository.port';
 
-@CommandHandler(CreateUserCommand)
-export class CreateUserService implements ICommandHandler {
+@CommandHandler(CreateIncidentCommand)
+export class CreateIncidentService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(IncidentRepository)
+    protected readonly repo: IncidentRepositoryPort,
   ) {}
-  async execute(command: CreateUserCommand): Promise<UserEntity> {
+  async execute(command: CreateIncidentCommand): Promise<IncidentEntity> {
     try {
-      const existingUser = await this.repo.findOneByEmail(command.email);
-      if (existingUser) {
-        throw new ArgumentInvalidException('user already exists');
-      }
-      const user = UserEntity.create({
-        name: command.name,
-        email: command.email,
-        phone: command.phone,
-        password: command.password,
-        verified: false,
+      const incident = IncidentEntity.create({
+        serviceCheckId: command.serviceCheckId,
+        status: command.status,
       });
       await this.repo.transaction(async () => {
-        this.repo.insert(user);
+        this.repo.insert(incident);
       });
-      return user;
+      return incident;
     } catch (error) {
       this.logger.error(
-        'CreateUserService.execute encountered an error',
+        'CreateIncidentService.execute encountered an error',
         error,
       );
     }

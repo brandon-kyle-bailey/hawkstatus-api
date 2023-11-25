@@ -19,13 +19,11 @@ export class ListIncidentController {
   async get(
     @Body() body: ListIncidentRequestDto,
     @Req() request: any,
-  ): Promise<IncidentResponseDto> {
+  ): Promise<IncidentResponseDto[]> {
     try {
-      const query = ListIncidentQuery.create({
-        id: body.id,
-      });
+      const query = ListIncidentQuery.create({});
       const result = await this.queryBus.execute(query);
-      const response = this.mapper.toResponse(result);
+      const response = result.map((res) => this.mapper.toResponse(res));
       return response;
     } catch (error) {
       this.logger.error(

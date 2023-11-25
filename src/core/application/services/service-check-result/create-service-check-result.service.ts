@@ -1,38 +1,34 @@
-import { ArgumentInvalidException } from '@app/common/exceptions/exceptions';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntity } from 'src/core/domain/entities/user.entity';
-import { CreateUserCommand } from 'src/interface/commands/user/create-user.command';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
+import { ServiceCheckResultEntity } from 'src/core/domain/entities/service-check-result.entity';
+import { CreateServiceCheckResultCommand } from 'src/interface/commands/service-check-result/create-service-check-result.command';
+import { ServiceCheckResultRepository } from '../../ports/service-check-result/service-check-result.repository';
+import { ServiceCheckResultRepositoryPort } from '../../ports/service-check-result/service-check-result.repository.port';
 
-@CommandHandler(CreateUserCommand)
-export class CreateUserService implements ICommandHandler {
+@CommandHandler(CreateServiceCheckResultCommand)
+export class CreateServiceCheckResultService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(ServiceCheckResultRepository)
+    protected readonly repo: ServiceCheckResultRepositoryPort,
   ) {}
-  async execute(command: CreateUserCommand): Promise<UserEntity> {
+  async execute(
+    command: CreateServiceCheckResultCommand,
+  ): Promise<ServiceCheckResultEntity> {
     try {
-      const existingUser = await this.repo.findOneByEmail(command.email);
-      if (existingUser) {
-        throw new ArgumentInvalidException('user already exists');
-      }
-      const user = UserEntity.create({
-        name: command.name,
-        email: command.email,
-        phone: command.phone,
-        password: command.password,
-        verified: false,
+      const serviceCheckResult = ServiceCheckResultEntity.create({
+        serviceCheckId: command.serviceCheckId,
+        status: command.status,
+        duration: command.duration,
+        response: command.response,
       });
       await this.repo.transaction(async () => {
-        this.repo.insert(user);
+        this.repo.insert(serviceCheckResult);
       });
-      return user;
+      return serviceCheckResult;
     } catch (error) {
       this.logger.error(
-        'CreateUserService.execute encountered an error',
+        'CreateServiceCheckResultService.execute encountered an error',
         error,
       );
     }

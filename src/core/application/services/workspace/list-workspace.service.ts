@@ -1,22 +1,25 @@
 import { Inject, Logger } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { UserEntity } from '../../../domain/entities/user.entity';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { GetUserQuery } from 'src/interface/queries/user/get-user.query';
+import { WorkspaceEntity } from 'src/core/domain/entities/workspace.entity';
+import { ListWorkspaceQuery } from 'src/interface/queries/workspace/list-workspace.query';
+import { WorkspaceRepository } from '../../ports/workspace/workspace.repository';
+import { WorkspaceRepositoryPort } from '../../ports/workspace/workspace.repository.port';
 
-@QueryHandler(GetUserQuery)
-export class GetUserService implements IQueryHandler {
+@QueryHandler(ListWorkspaceQuery)
+export class ListWorkspaceService implements IQueryHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(WorkspaceRepository)
+    protected readonly repo: WorkspaceRepositoryPort,
   ) {}
-  async execute(query: GetUserQuery): Promise<UserEntity> {
+  async execute(query: ListWorkspaceQuery): Promise<WorkspaceEntity[]> {
     try {
-      return await this.repo.findOneById(query.id);
+      return await this.repo.findAll();
     } catch (error) {
-      this.logger.error('GetUserService.execute encountered an error', error);
+      this.logger.error(
+        'ListWorkspaceService.execute encountered an error',
+        error,
+      );
     }
   }
 }

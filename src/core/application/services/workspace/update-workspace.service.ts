@@ -1,29 +1,29 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntity } from '../../../domain/entities/user.entity';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { UpdateUserCommand } from 'src/interface/commands/user/update-user.command';
+import { WorkspaceEntity } from 'src/core/domain/entities/workspace.entity';
+import { UpdateWorkspaceCommand } from 'src/interface/commands/workspace/update-workspace.command';
+import { WorkspaceRepository } from '../../ports/workspace/workspace.repository';
+import { WorkspaceRepositoryPort } from '../../ports/workspace/workspace.repository.port';
 
-@CommandHandler(UpdateUserCommand)
-export class UpdateUserService implements ICommandHandler {
+@CommandHandler(UpdateWorkspaceCommand)
+export class UpdateWorkspaceService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(WorkspaceRepository)
+    protected readonly repo: WorkspaceRepositoryPort,
   ) {}
-  async execute(command: UpdateUserCommand): Promise<UserEntity> {
+  async execute(command: UpdateWorkspaceCommand): Promise<WorkspaceEntity> {
     try {
-      let user: UserEntity;
+      let workspace: WorkspaceEntity;
       await this.repo.transaction(async () => {
-        user = await this.repo.findOneById(command.userId);
-        user.update(command);
-        this.repo.save(user);
+        workspace = await this.repo.findOneById(command.workspaceId);
+        workspace.update(command);
+        this.repo.save(workspace);
       });
-      return user;
+      return workspace;
     } catch (error) {
       this.logger.error(
-        'UpdateUserService.execute encountered an error',
+        'UpdateWorkspaceService.execute encountered an error',
         error,
       );
     }

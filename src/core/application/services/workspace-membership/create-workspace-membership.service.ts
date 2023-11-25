@@ -1,38 +1,32 @@
-import { ArgumentInvalidException } from '@app/common/exceptions/exceptions';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntity } from 'src/core/domain/entities/user.entity';
-import { CreateUserCommand } from 'src/interface/commands/user/create-user.command';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
+import { WorkspaceMembershipEntity } from 'src/core/domain/entities/workspace-membership.entity';
+import { CreateWorkspaceMembershipCommand } from 'src/interface/commands/workspace-membership/create-workspace-membership.command';
+import { WorkspaceMembershipRepository } from '../../ports/workspace-membership/workspace-membership.repository';
+import { WorkspaceMembershipRepositoryPort } from '../../ports/workspace-membership/workspace-membership.repository.port';
 
-@CommandHandler(CreateUserCommand)
-export class CreateUserService implements ICommandHandler {
+@CommandHandler(CreateWorkspaceMembershipCommand)
+export class CreateWorkspaceMembershipService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(WorkspaceMembershipRepository)
+    protected readonly repo: WorkspaceMembershipRepositoryPort,
   ) {}
-  async execute(command: CreateUserCommand): Promise<UserEntity> {
+  async execute(
+    command: CreateWorkspaceMembershipCommand,
+  ): Promise<WorkspaceMembershipEntity> {
     try {
-      const existingUser = await this.repo.findOneByEmail(command.email);
-      if (existingUser) {
-        throw new ArgumentInvalidException('user already exists');
-      }
-      const user = UserEntity.create({
-        name: command.name,
-        email: command.email,
-        phone: command.phone,
-        password: command.password,
-        verified: false,
+      const workspaceMembership = WorkspaceMembershipEntity.create({
+        workspaceId: command.workspaceId,
+        userId: command.userId,
       });
       await this.repo.transaction(async () => {
-        this.repo.insert(user);
+        this.repo.insert(workspaceMembership);
       });
-      return user;
+      return workspaceMembership;
     } catch (error) {
       this.logger.error(
-        'CreateUserService.execute encountered an error',
+        'CreateWorkspaceMembershipService.execute encountered an error',
         error,
       );
     }

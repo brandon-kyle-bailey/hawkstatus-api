@@ -1,29 +1,31 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntity } from '../../../domain/entities/user.entity';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { UpdateUserCommand } from 'src/interface/commands/user/update-user.command';
+import { WorkspaceMembershipEntity } from 'src/core/domain/entities/workspace-membership.entity';
+import { UpdateWorkspaceMembershipCommand } from 'src/interface/commands/workspace-membership/update-workspace-membership.command';
+import { WorkspaceMembershipRepository } from '../../ports/workspace-membership/workspace-membership.repository';
+import { WorkspaceMembershipRepositoryPort } from '../../ports/workspace-membership/workspace-membership.repository.port';
 
-@CommandHandler(UpdateUserCommand)
-export class UpdateUserService implements ICommandHandler {
+@CommandHandler(UpdateWorkspaceMembershipCommand)
+export class UpdateWorkspaceMembershipService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(WorkspaceMembershipRepository)
+    protected readonly repo: WorkspaceMembershipRepositoryPort,
   ) {}
-  async execute(command: UpdateUserCommand): Promise<UserEntity> {
+  async execute(
+    command: UpdateWorkspaceMembershipCommand,
+  ): Promise<WorkspaceMembershipEntity> {
     try {
-      let user: UserEntity;
+      let workspaceMembership: WorkspaceMembershipEntity;
       await this.repo.transaction(async () => {
-        user = await this.repo.findOneById(command.userId);
-        user.update(command);
-        this.repo.save(user);
+        workspaceMembership = await this.repo.findOneById(command.workspaceId);
+        workspaceMembership.update(command);
+        this.repo.save(workspaceMembership);
       });
-      return user;
+      return workspaceMembership;
     } catch (error) {
       this.logger.error(
-        'UpdateUserService.execute encountered an error',
+        'UpdateWorkspaceMembershipService.execute encountered an error',
         error,
       );
     }

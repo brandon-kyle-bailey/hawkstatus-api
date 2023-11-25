@@ -1,29 +1,31 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntity } from '../../../domain/entities/user.entity';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { UpdateUserCommand } from 'src/interface/commands/user/update-user.command';
+import { ServiceCheckEntity } from 'src/core/domain/entities/service-check.entity';
+import { ServiceCheckRepository } from '../../ports/service-check/service-check.repository';
+import { ServiceCheckRepositoryPort } from '../../ports/service-check/service-check.repository.port';
+import { UpdateServiceCheckCommand } from 'src/interface/commands/service-check/update-service-check.command';
 
-@CommandHandler(UpdateUserCommand)
-export class UpdateUserService implements ICommandHandler {
+@CommandHandler(UpdateServiceCheckCommand)
+export class UpdateServiceCheckService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(ServiceCheckRepository)
+    protected readonly repo: ServiceCheckRepositoryPort,
   ) {}
-  async execute(command: UpdateUserCommand): Promise<UserEntity> {
+  async execute(
+    command: UpdateServiceCheckCommand,
+  ): Promise<ServiceCheckEntity> {
     try {
-      let user: UserEntity;
+      let serviceCheck: ServiceCheckEntity;
       await this.repo.transaction(async () => {
-        user = await this.repo.findOneById(command.userId);
-        user.update(command);
-        this.repo.save(user);
+        serviceCheck = await this.repo.findOneById(command.serviceCheckId);
+        serviceCheck.update(command);
+        this.repo.save(serviceCheck);
       });
-      return user;
+      return serviceCheck;
     } catch (error) {
       this.logger.error(
-        'UpdateUserService.execute encountered an error',
+        'UpdateServiceCheckService.execute encountered an error',
         error,
       );
     }

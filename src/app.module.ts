@@ -74,6 +74,36 @@ import { DeleteWorkspaceController } from './interface/controllers/workspace/del
 import { GetWorkspaceController } from './interface/controllers/workspace/get-workspace.http.controller';
 import { ListWorkspaceController } from './interface/controllers/workspace/list-workspace.http.controller';
 import { UpdateWorkspaceController } from './interface/controllers/workspace/update-workspace.http.controller';
+import { CreateIncidentService } from './core/application/services/incident/create-incident.service';
+import { DeleteIncidentService } from './core/application/services/incident/delete-incident.service';
+import { GetIncidentService } from './core/application/services/incident/get-incident.service';
+import { UpdateIncidentService } from './core/application/services/incident/update-incident.service';
+import { CreateIntegrationService } from './core/application/services/integration/create-integration.service';
+import { DeleteIntegrationService } from './core/application/services/integration/delete-integration.service';
+import { GetIntegrationService } from './core/application/services/integration/get-integration.service';
+import { ListIntegrationService } from './core/application/services/integration/list-integration.service';
+import { UpdateIntegrationService } from './core/application/services/integration/update-integration.service';
+import { CreateServiceCheckResultService } from './core/application/services/service-check-result/create-service-check-result.service';
+import { DeleteServiceCheckResultService } from './core/application/services/service-check-result/delete-service-check-result.service';
+import { GetServiceCheckResultService } from './core/application/services/service-check-result/get-service-check-result.service';
+import { ListServiceCheckResultService } from './core/application/services/service-check-result/list-service-check-result.service';
+import { UpdateServiceCheckResultService } from './core/application/services/service-check-result/update-service-check-result.service';
+import { CreateServiceCheckService } from './core/application/services/service-check/create-service-check.service';
+import { DeleteServiceCheckService } from './core/application/services/service-check/delete-service-check.service';
+import { GetServiceCheckService } from './core/application/services/service-check/get-service-check.service';
+import { ListServiceCheckService } from './core/application/services/service-check/list-service-check.service';
+import { UpdateServiceCheckService } from './core/application/services/service-check/update-service-check.service';
+import { CreateWorkspaceMembershipService } from './core/application/services/workspace-membership/create-workspace-membership.service';
+import { UpdateWorkspaceMembershipService } from './core/application/services/workspace-membership/update-workspace-membership.service';
+import { CreateWorkspaceService } from './core/application/services/workspace/create-workspace.service';
+import { DeleteWorkspaceService } from './core/application/services/workspace/delete-workspace.service';
+import { GetWorkspaceService } from './core/application/services/workspace/get-workspace.service';
+import { UpdateWorkspaceService } from './core/application/services/workspace/update-workspace.service';
+import { DeleteWorkspaceMembershipService } from './core/application/services/workspace-membership/delete-workspace-membership.service';
+import { GetWorkspaceMembershipService } from './core/application/services/workspace-membership/get-workspace-membership.service';
+import { ListWorkspaceService } from './core/application/services/workspace/list-workspace.service';
+import { ListWorkspaceMembershipService } from './core/application/services/workspace-membership/list-workspace-membership.service';
+import { ListIncidentService } from './core/application/services/incident/list-incident.service';
 
 const {
   web: { secret, access_token_refresh },
@@ -119,6 +149,42 @@ const services = [
   SigninUserService,
 
   SendEmailService,
+
+  CreateIncidentService,
+  UpdateIncidentService,
+  GetIncidentService,
+  ListIncidentService,
+  DeleteIncidentService,
+
+  CreateIntegrationService,
+  UpdateIntegrationService,
+  GetIntegrationService,
+  ListIntegrationService,
+  DeleteIntegrationService,
+
+  CreateWorkspaceService,
+  UpdateWorkspaceService,
+  GetWorkspaceService,
+  ListWorkspaceService,
+  DeleteWorkspaceService,
+
+  CreateWorkspaceMembershipService,
+  UpdateWorkspaceMembershipService,
+  GetWorkspaceMembershipService,
+  ListWorkspaceMembershipService,
+  DeleteWorkspaceMembershipService,
+
+  CreateServiceCheckService,
+  UpdateServiceCheckService,
+  GetServiceCheckService,
+  ListServiceCheckService,
+  DeleteServiceCheckService,
+
+  CreateServiceCheckResultService,
+  UpdateServiceCheckResultService,
+  GetServiceCheckResultService,
+  ListServiceCheckResultService,
+  DeleteServiceCheckResultService,
 ];
 const guards = [AuthGuard];
 

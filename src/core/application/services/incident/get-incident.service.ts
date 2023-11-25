@@ -1,22 +1,25 @@
 import { Inject, Logger } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { UserEntity } from '../../../domain/entities/user.entity';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { GetUserQuery } from 'src/interface/queries/user/get-user.query';
+import { IncidentEntity } from 'src/core/domain/entities/incident.entity';
+import { GetIncidentQuery } from 'src/interface/queries/incident/get-incident.query';
+import { IncidentRepository } from '../../ports/incident/incident.repository';
+import { IncidentRepositoryPort } from '../../ports/incident/incident.repository.port';
 
-@QueryHandler(GetUserQuery)
-export class GetUserService implements IQueryHandler {
+@QueryHandler(GetIncidentQuery)
+export class GetIncidentService implements IQueryHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(IncidentRepository)
+    protected readonly repo: IncidentRepositoryPort,
   ) {}
-  async execute(query: GetUserQuery): Promise<UserEntity> {
+  async execute(query: GetIncidentQuery): Promise<IncidentEntity> {
     try {
       return await this.repo.findOneById(query.id);
     } catch (error) {
-      this.logger.error('GetUserService.execute encountered an error', error);
+      this.logger.error(
+        'GetIncidentService.execute encountered an error',
+        error,
+      );
     }
   }
 }

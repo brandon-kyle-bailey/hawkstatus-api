@@ -19,13 +19,11 @@ export class ListIntegrationController {
   async get(
     @Body() body: ListIntegrationRequestDto,
     @Req() request: any,
-  ): Promise<IntegrationResponseDto> {
+  ): Promise<IntegrationResponseDto[]> {
     try {
-      const query = ListIntegrationQuery.create({
-        id: body.id,
-      });
+      const query = ListIntegrationQuery.create({});
       const result = await this.queryBus.execute(query);
-      const response = this.mapper.toResponse(result);
+      const response = result.map((res) => this.mapper.toResponse(res));
       return response;
     } catch (error) {
       this.logger.error(

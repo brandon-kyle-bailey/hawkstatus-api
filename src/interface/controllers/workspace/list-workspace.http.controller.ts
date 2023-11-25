@@ -19,13 +19,11 @@ export class ListWorkspaceController {
   async get(
     @Body() body: ListWorkspaceRequestDto,
     @Req() request: any,
-  ): Promise<WorkspaceResponseDto> {
+  ): Promise<WorkspaceResponseDto[]> {
     try {
-      const query = ListWorkspaceQuery.create({
-        id: body.id,
-      });
+      const query = ListWorkspaceQuery.create({});
       const result = await this.queryBus.execute(query);
-      const response = this.mapper.toResponse(result);
+      const response = result.map((res) => this.mapper.toResponse(res));
       return response;
     } catch (error) {
       this.logger.error(

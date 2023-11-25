@@ -1,38 +1,32 @@
 import { ArgumentInvalidException } from '@app/common/exceptions/exceptions';
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntity } from 'src/core/domain/entities/user.entity';
-import { CreateUserCommand } from 'src/interface/commands/user/create-user.command';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
+import { IntegrationEntity } from 'src/core/domain/entities/integration.entity';
+import { CreateIntegrationCommand } from 'src/interface/commands/integration/create-integration.command';
+import { IntegrationRepository } from '../../ports/integration/integration.repository';
+import { IntegrationRepositoryPort } from '../../ports/integration/integration.repository.port';
 
-@CommandHandler(CreateUserCommand)
-export class CreateUserService implements ICommandHandler {
+@CommandHandler(CreateIntegrationCommand)
+export class CreateIntegrationService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(IntegrationRepository)
+    protected readonly repo: IntegrationRepositoryPort,
   ) {}
-  async execute(command: CreateUserCommand): Promise<UserEntity> {
+  async execute(command: CreateIntegrationCommand): Promise<IntegrationEntity> {
     try {
-      const existingUser = await this.repo.findOneByEmail(command.email);
-      if (existingUser) {
-        throw new ArgumentInvalidException('user already exists');
-      }
-      const user = UserEntity.create({
-        name: command.name,
-        email: command.email,
-        phone: command.phone,
-        password: command.password,
-        verified: false,
+      const integration = IntegrationEntity.create({
+        ownerId: command.ownerId,
+        type: command.type,
+        url: command.url,
       });
       await this.repo.transaction(async () => {
-        this.repo.insert(user);
+        this.repo.insert(integration);
       });
-      return user;
+      return integration;
     } catch (error) {
       this.logger.error(
-        'CreateUserService.execute encountered an error',
+        'CreateIntegrationService.execute encountered an error',
         error,
       );
     }

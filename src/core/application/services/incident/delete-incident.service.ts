@@ -1,28 +1,28 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserRepository } from '../../ports/user/user.repository';
-import { UserRepositoryPort } from '../../ports/user/user.repository.port';
 import { AggregateID } from '@app/common/ddd/entity.base';
-import { DeleteUserCommand } from 'src/interface/commands/user/delete-user.command';
+import { DeleteIncidentCommand } from 'src/interface/commands/incident/delete-incident.command';
+import { IncidentRepository } from '../../ports/incident/incident.repository';
+import { IncidentRepositoryPort } from '../../ports/incident/incident.repository.port';
 
-@CommandHandler(DeleteUserCommand)
-export class DeleteUserService implements ICommandHandler {
+@CommandHandler(DeleteIncidentCommand)
+export class DeleteIncidentService implements ICommandHandler {
   constructor(
     private readonly logger: Logger,
-    @Inject(UserRepository)
-    protected readonly repo: UserRepositoryPort,
+    @Inject(IncidentRepository)
+    protected readonly repo: IncidentRepositoryPort,
   ) {}
-  async execute(command: DeleteUserCommand): Promise<AggregateID> {
+  async execute(command: DeleteIncidentCommand): Promise<AggregateID> {
     try {
       await this.repo.transaction(async () => {
-        const User = await this.repo.findOneById(command.id);
-        User.delete();
-        await this.repo.delete(User);
+        const incident = await this.repo.findOneById(command.id);
+        incident.delete();
+        await this.repo.delete(incident);
       });
       return command.id;
     } catch (error) {
       this.logger.error(
-        'DeleteUserService.execute encountered an error',
+        'DeleteIncidentService.execute encountered an error',
         error,
       );
     }

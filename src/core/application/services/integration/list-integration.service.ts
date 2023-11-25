@@ -3,20 +3,23 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { UserEntity } from '../../../domain/entities/user.entity';
 import { UserRepository } from '../../ports/user/user.repository';
 import { UserRepositoryPort } from '../../ports/user/user.repository.port';
-import { GetUserQuery } from 'src/interface/queries/user/get-user.query';
+import { ListIntegrationQuery } from 'src/interface/queries/integration/list-integration.query';
 
-@QueryHandler(GetUserQuery)
-export class GetUserService implements IQueryHandler {
+@QueryHandler(ListIntegrationQuery)
+export class ListIntegrationService implements IQueryHandler {
   constructor(
     private readonly logger: Logger,
     @Inject(UserRepository)
     protected readonly repo: UserRepositoryPort,
   ) {}
-  async execute(query: GetUserQuery): Promise<UserEntity> {
+  async execute(query: ListIntegrationQuery): Promise<UserEntity[]> {
     try {
-      return await this.repo.findOneById(query.id);
+      return await this.repo.findAll();
     } catch (error) {
-      this.logger.error('GetUserService.execute encountered an error', error);
+      this.logger.error(
+        'ListIntegrationService.execute encountered an error',
+        error,
+      );
     }
   }
 }
