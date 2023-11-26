@@ -1,5 +1,6 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { AuthGuard } from 'src/core/application/services/auth/auth.guard';
 import { IncidentMapper } from 'src/infrastructure/mappers/incident.mapper';
 import { CreateIncidentCommand } from 'src/interface/commands/incident/create-incident.command';
 import { CreateIncidentRequestDto } from 'src/interface/dtos/incident/create-incident.request.dto';
@@ -13,6 +14,7 @@ export class CreateIncidentController {
     protected readonly mapper: IncidentMapper,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Post('incident')
   async create(
     @Body() body: CreateIncidentRequestDto,

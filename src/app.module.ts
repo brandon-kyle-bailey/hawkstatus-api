@@ -104,6 +104,8 @@ import { GetWorkspaceMembershipService } from './core/application/services/works
 import { ListWorkspaceService } from './core/application/services/workspace/list-workspace.service';
 import { ListWorkspaceMembershipService } from './core/application/services/workspace-membership/list-workspace-membership.service';
 import { ListIncidentService } from './core/application/services/incident/list-incident.service';
+import { ScheduleServiceCheckService } from './core/application/services/service-check/schedule-service-check.service';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
 const {
   web: { secret, access_token_refresh },
@@ -180,6 +182,8 @@ const services = [
   ListServiceCheckService,
   DeleteServiceCheckService,
 
+  ScheduleServiceCheckService,
+
   CreateServiceCheckResultService,
   UpdateServiceCheckResultService,
   GetServiceCheckResultService,
@@ -249,6 +253,7 @@ const controllers = [
 const providers = [
   Logger,
   ConfigService,
+  SchedulerRegistry,
   ...repositories,
   ...mappers,
   ...services,

@@ -29,6 +29,7 @@ export class CreateServiceCheckService implements ICommandHandler {
         status: command.status,
         type: command.type,
       });
+      serviceCheck.schedule();
       await this.repo.transaction(async () => {
         this.repo.insert(serviceCheck);
       });

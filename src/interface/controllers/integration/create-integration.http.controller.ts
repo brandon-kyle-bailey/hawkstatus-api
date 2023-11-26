@@ -1,5 +1,6 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { AuthGuard } from 'src/core/application/services/auth/auth.guard';
 import { IntegrationMapper } from 'src/infrastructure/mappers/integration.mapper';
 import { CreateIntegrationCommand } from 'src/interface/commands/integration/create-integration.command';
 import { CreateIntegrationRequestDto } from 'src/interface/dtos/integration/create-integration.request.dto';
@@ -13,6 +14,7 @@ export class CreateIntegrationController {
     protected readonly mapper: IntegrationMapper,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Post('integration')
   async create(
     @Body() body: CreateIntegrationRequestDto,

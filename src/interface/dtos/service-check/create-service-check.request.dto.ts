@@ -1,5 +1,4 @@
 export class CreateServiceCheckRequestDto {
-  readonly ownerId: string;
   readonly name: string;
   readonly url: string;
   readonly interval: number;

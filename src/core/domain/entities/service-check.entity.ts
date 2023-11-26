@@ -6,9 +6,63 @@ import {
 import { AggregateID } from '@app/common/ddd/entity.base';
 import { AggregateRoot } from '@app/common/ddd/aggregate-root.base';
 
+export enum ScheduleType {
+  Cron = 'cron',
+  Timeout = 'timeout',
+  Interval = 'interval',
+}
+
+export class ScheduleServiceCheckDomainEvent extends DomainEvent {
+  readonly serviceCheckId: AggregateID;
+  readonly url: string;
+  readonly interval: number;
+  readonly timeout: number;
+  readonly alertCheckThreshold: number;
+  readonly method: string;
+  readonly body: string;
+  readonly headers: { [key: string]: string }[];
+  readonly status: string;
+  readonly type: string;
+  constructor(props: DomainEventProps<ScheduleServiceCheckDomainEvent>) {
+    super(props);
+    this.serviceCheckId = props.serviceCheckId;
+    this.url = props.url;
+    this.interval = props.interval;
+    this.timeout = props.timeout;
+    this.alertCheckThreshold = props.alertCheckThreshold;
+    this.method = props.method;
+    this.body = props.body;
+    this.headers = props.headers;
+    this.status = props.status;
+    this.type = props.type;
+  }
+}
+
 export class ServiceCheckCreatedDomainEvent extends DomainEvent {
+  readonly ownerId: AggregateID;
+  readonly name: string;
+  readonly url: string;
+  readonly interval: number;
+  readonly timeout: number;
+  readonly alertCheckThreshold: number;
+  readonly method: string;
+  readonly body: string;
+  readonly headers: { [key: string]: string }[];
+  readonly status: string;
+  readonly type: string;
   constructor(props: DomainEventProps<ServiceCheckCreatedDomainEvent>) {
     super(props);
+    this.ownerId = props.ownerId;
+    this.name = props.name;
+    this.url = props.url;
+    this.interval = props.interval;
+    this.timeout = props.timeout;
+    this.alertCheckThreshold = props.alertCheckThreshold;
+    this.method = props.method;
+    this.body = props.body;
+    this.headers = props.headers;
+    this.status = props.status;
+    this.type = props.type;
   }
 }
 
@@ -70,6 +124,16 @@ export class ServiceCheckEntity extends AggregateRoot<ServiceCheckProps> {
     this.addEvent(
       new ServiceCheckUpdatedDomainEvent({
         aggregateId: this.id,
+      }),
+    );
+  }
+
+  schedule(): void {
+    this.addEvent(
+      new ScheduleServiceCheckDomainEvent({
+        aggregateId: this.id,
+        serviceCheckId: this.id,
+        ...this.getProps(),
       }),
     );
   }
