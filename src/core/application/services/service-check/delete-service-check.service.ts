@@ -16,6 +16,7 @@ export class DeleteServiceCheckService implements ICommandHandler {
     try {
       await this.repo.transaction(async () => {
         const serviceCheck = await this.repo.findOneById(command.id);
+        serviceCheck.unSchedule();
         serviceCheck.delete();
         await this.repo.delete(serviceCheck);
       });

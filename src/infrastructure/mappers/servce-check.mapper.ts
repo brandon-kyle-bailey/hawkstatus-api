@@ -1,7 +1,12 @@
 import { Mapper } from '@app/common/ddd/mapper.base';
 import { Injectable } from '@nestjs/common';
 import { ServiceCheckRepositoryEntity } from 'src/core/application/ports/service-check/service-check.entity';
-import { ServiceCheckEntity } from 'src/core/domain/entities/service-check.entity';
+import {
+  ScheduleMethod,
+  ScheduleStatus,
+  ScheduleType,
+  ServiceCheckEntity,
+} from 'src/core/domain/entities/service-check.entity';
 import { ServiceCheckResponseDto } from 'src/interface/dtos/service-check/service-check.response.dto';
 
 @Injectable()
@@ -31,11 +36,11 @@ export class ServiceCheckMapper
       interval: copy.interval,
       timeout: copy.timeout,
       alertCheckThreshold: copy.alertCheckThreshold,
-      method: copy.method,
+      method: copy.method.toString(),
       body: copy.body,
       headers: JSON.stringify(copy.headers),
-      status: copy.status,
-      type: copy.type,
+      status: copy.status.toString(),
+      type: copy.type.toString(),
     };
     return record;
   }
@@ -56,11 +61,11 @@ export class ServiceCheckMapper
         interval: record.interval,
         timeout: record.timeout,
         alertCheckThreshold: record.alertCheckThreshold,
-        method: record.method,
+        method: record.method as ScheduleMethod,
         body: record.body,
         headers: JSON.parse(record.headers),
-        status: record.status,
-        type: record.type,
+        status: record.status as ScheduleStatus,
+        type: record.type as ScheduleType,
       },
     });
     return entity;

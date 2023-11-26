@@ -106,6 +106,14 @@ import { ListWorkspaceMembershipService } from './core/application/services/work
 import { ListIncidentService } from './core/application/services/incident/list-incident.service';
 import { ScheduleServiceCheckService } from './core/application/services/service-check/schedule-service-check.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { UnScheduleServiceCheckService } from './core/application/services/service-check/unschedule-service-check.service';
+import { PickupServiceCheckService } from './core/application/services/service-check/pickup-service-check.service';
+import { PickupServiceCheckCliController } from './interface/controllers/service-check/pickup-service-check.cli.controller';
+import { ExecuteServiceCheckService } from './core/application/services/service-check/execute-service-check.service';
+import { HttpModule } from '@nestjs/axios';
+import { ValidateIncidentService } from './core/application/services/incident/validate-incident.service';
+import { NotifyIncidentEventController } from './interface/controllers/incident/notify-incident.event.controller';
+import { NotifyIncidentService } from './core/application/services/incident/notify-incident.service';
 
 const {
   web: { secret, access_token_refresh },
@@ -158,6 +166,8 @@ const services = [
   ListIncidentService,
   DeleteIncidentService,
 
+  NotifyIncidentService,
+
   CreateIntegrationService,
   UpdateIntegrationService,
   GetIntegrationService,
@@ -183,12 +193,17 @@ const services = [
   DeleteServiceCheckService,
 
   ScheduleServiceCheckService,
+  UnScheduleServiceCheckService,
+  PickupServiceCheckService,
+  ExecuteServiceCheckService,
 
   CreateServiceCheckResultService,
   UpdateServiceCheckResultService,
   GetServiceCheckResultService,
   ListServiceCheckResultService,
   DeleteServiceCheckResultService,
+
+  ValidateIncidentService,
 ];
 const guards = [AuthGuard];
 
@@ -208,6 +223,7 @@ const imports = [
   CqrsModule,
   DatabaseModule,
   SmtpModule,
+  HttpModule,
 ];
 const controllers = [
   RefreshUserTokenController,
@@ -226,6 +242,8 @@ const controllers = [
   DeleteIncidentController,
   ListIncidentController,
 
+  NotifyIncidentEventController,
+
   GetIntegrationController,
   UpdateIntegrationController,
   CreateIntegrationController,
@@ -243,6 +261,8 @@ const controllers = [
   CreateServiceCheckController,
   DeleteServiceCheckController,
   ListServiceCheckController,
+
+  PickupServiceCheckCliController,
 
   GetServiceCheckResultController,
   UpdateServiceCheckResultController,

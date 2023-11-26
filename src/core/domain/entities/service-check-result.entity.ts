@@ -7,8 +7,16 @@ import { AggregateID } from '@app/common/ddd/entity.base';
 import { AggregateRoot } from '@app/common/ddd/aggregate-root.base';
 
 export class ServiceCheckResultCreatedDomainEvent extends DomainEvent {
+  readonly serviceCheckId: AggregateID;
+  readonly status: number;
+  readonly duration: number;
+  readonly response: string;
   constructor(props: DomainEventProps<ServiceCheckResultCreatedDomainEvent>) {
     super(props);
+    this.serviceCheckId = props.serviceCheckId;
+    this.status = props.status;
+    this.duration = props.duration;
+    this.response = props.response;
   }
 }
 
@@ -30,6 +38,7 @@ export interface ServiceCheckResultProps {
   status: number;
   duration: number;
   response: string;
+  incidentId?: AggregateID;
 }
 
 // Properties that are needed for a ServiceCheckResult creation
@@ -60,7 +69,18 @@ export class ServiceCheckResultEntity extends AggregateRoot<ServiceCheckResultPr
     return serviceCheckResult;
   }
 
+  get incidentId() {
+    return this.props.incidentId;
+  }
+
+  setIncidentId(incidentId: AggregateID) {
+    this.props.incidentId = incidentId;
+  }
+
   update(props: UpdateServiceCheckResultProps): void {
+    if (props.incidentId) {
+      this.setIncidentId(props.incidentId);
+    }
     this.addEvent(
       new ServiceCheckResultUpdatedDomainEvent({
         aggregateId: this.id,

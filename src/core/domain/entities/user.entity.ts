@@ -69,6 +69,14 @@ export class UserEntity extends AggregateRoot<UserProps> {
     return user;
   }
 
+  get email() {
+    return this.props.email;
+  }
+
+  get name() {
+    return this.props.name;
+  }
+
   update(props: UpdateUserProps): void {
     if (props.verified) {
       this.setIsVerified(props.verified);

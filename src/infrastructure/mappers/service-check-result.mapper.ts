@@ -28,6 +28,7 @@ export class ServiceCheckResultMapper
       updatedAt: copy.updatedAt,
       deletedAt: copy.deletedAt,
       serviceCheckId: copy.serviceCheckId,
+      incidentId: copy.incidentId,
       status: copy.status,
       duration: copy.duration,
       response: copy.response,

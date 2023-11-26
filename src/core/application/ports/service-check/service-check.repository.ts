@@ -8,7 +8,10 @@ import {
   PaginatedQueryParams,
   Paginated,
 } from '@app/common/ports/repository.port';
-import { ServiceCheckEntity } from 'src/core/domain/entities/service-check.entity';
+import {
+  ScheduleStatus,
+  ServiceCheckEntity,
+} from 'src/core/domain/entities/service-check.entity';
 import { ServiceCheckMapper } from 'src/infrastructure/mappers/servce-check.mapper';
 
 @Injectable()
@@ -20,6 +23,22 @@ export class ServiceCheckRepository implements ServiceCheckRepositoryPort {
     protected readonly logger: Logger,
     private eventEmitter: EventEmitter2,
   ) {}
+
+  async findOneBy(filter: any): Promise<ServiceCheckEntity> {
+    const result = await this.repo.findOne({
+      where: filter,
+    });
+    if (!result) {
+      return null;
+    }
+    const entity = this.mapper.toDomain(result);
+    return entity;
+  }
+
+  async findAllByStatus(status: ScheduleStatus): Promise<ServiceCheckEntity[]> {
+    const result = await this.repo.findBy({ status: status.toString() });
+    return result.map((record) => this.mapper.toDomain(record));
+  }
 
   async save(entity: ServiceCheckEntity): Promise<void> {
     await this.repo.save(this.mapper.toPersistence(entity));

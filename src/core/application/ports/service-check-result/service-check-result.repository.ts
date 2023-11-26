@@ -22,7 +22,16 @@ export class ServiceCheckResultRepository
     protected readonly logger: Logger,
     private eventEmitter: EventEmitter2,
   ) {}
-
+  async findOneBy(filter: any): Promise<ServiceCheckResultEntity> {
+    const result = await this.repo.findOne({
+      where: filter,
+    });
+    if (!result) {
+      return null;
+    }
+    const entity = this.mapper.toDomain(result);
+    return entity;
+  }
   async save(entity: ServiceCheckResultEntity): Promise<void> {
     await this.repo.save(this.mapper.toPersistence(entity));
     return await entity.publishEvents(this.logger, this.eventEmitter);
@@ -55,6 +64,7 @@ export class ServiceCheckResultRepository
       skip: params.offset,
       take: params.limit,
       order: { [String(params.orderBy.field)]: params.orderBy.param },
+      where: params.filter,
     });
     if (!result) {
       return null;

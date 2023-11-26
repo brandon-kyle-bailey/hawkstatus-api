@@ -10,7 +10,7 @@ export class UpdateServiceCheckCommand extends Command {
   readonly alertCheckThreshold?: number;
   readonly method?: string;
   readonly body?: string;
-  readonly headers?: { [key: string]: string }[];
+  readonly headers?: { [key: string]: any };
   readonly status?: string;
   readonly type?: string;
   private constructor(props: CommandProps<UpdateServiceCheckCommand>) {

@@ -1,26 +1,30 @@
-import { Inject, Logger } from '@nestjs/common';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ServiceCheckResultEntity } from 'src/core/domain/entities/service-check-result.entity';
-import { CreateServiceCheckResultCommand } from 'src/interface/commands/service-check-result/create-service-check-result.command';
 import { ServiceCheckResultRepository } from '../../ports/service-check-result/service-check-result.repository';
 import { ServiceCheckResultRepositoryPort } from '../../ports/service-check-result/service-check-result.repository.port';
+import { OnEvent } from '@nestjs/event-emitter';
+import { ExecuteScheduleServiceCheckCompleteDomainEvent } from 'src/core/domain/entities/service-check.entity';
 
-@CommandHandler(CreateServiceCheckResultCommand)
-export class CreateServiceCheckResultService implements ICommandHandler {
+@Injectable()
+export class CreateServiceCheckResultService {
   constructor(
     private readonly logger: Logger,
     @Inject(ServiceCheckResultRepository)
     protected readonly repo: ServiceCheckResultRepositoryPort,
   ) {}
-  async execute(
-    command: CreateServiceCheckResultCommand,
+  @OnEvent(ExecuteScheduleServiceCheckCompleteDomainEvent.name, {
+    async: true,
+    promisify: true,
+  })
+  async handle(
+    event: ExecuteScheduleServiceCheckCompleteDomainEvent,
   ): Promise<ServiceCheckResultEntity> {
     try {
       const serviceCheckResult = ServiceCheckResultEntity.create({
-        serviceCheckId: command.serviceCheckId,
-        status: command.status,
-        duration: command.duration,
-        response: command.response,
+        serviceCheckId: event.serviceCheckId,
+        status: event.status,
+        duration: event.duration,
+        response: event.response,
       });
       await this.repo.transaction(async () => {
         this.repo.insert(serviceCheckResult);

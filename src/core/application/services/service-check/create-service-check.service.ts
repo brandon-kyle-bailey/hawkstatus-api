@@ -1,6 +1,11 @@
 import { Inject, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ServiceCheckEntity } from 'src/core/domain/entities/service-check.entity';
+import {
+  ScheduleMethod,
+  ScheduleStatus,
+  ScheduleType,
+  ServiceCheckEntity,
+} from 'src/core/domain/entities/service-check.entity';
 import { CreateServiceCheckCommand } from 'src/interface/commands/service-check/create-service-check.command';
 import { ServiceCheckRepository } from '../../ports/service-check/service-check.repository';
 import { ServiceCheckRepositoryPort } from '../../ports/service-check/service-check.repository.port';
@@ -23,11 +28,11 @@ export class CreateServiceCheckService implements ICommandHandler {
         interval: command.interval,
         timeout: command.timeout,
         alertCheckThreshold: command.alertCheckThreshold,
-        method: command.method,
+        method: command.method as ScheduleMethod,
         body: command.body,
         headers: command.headers,
-        status: command.status,
-        type: command.type,
+        status: command.status as ScheduleStatus,
+        type: command.type as ScheduleType,
       });
       serviceCheck.schedule();
       await this.repo.transaction(async () => {

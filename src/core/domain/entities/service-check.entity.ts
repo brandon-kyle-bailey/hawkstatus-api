@@ -12,7 +12,71 @@ export enum ScheduleType {
   Interval = 'interval',
 }
 
+export enum ScheduleStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
+
+export enum ScheduleMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
+  HEAD = 'HEAD',
+}
+
+export class UnScheduleServiceCheckDomainEvent extends DomainEvent {
+  readonly serviceCheckId: AggregateID;
+  readonly type: ScheduleType;
+  constructor(props: DomainEventProps<UnScheduleServiceCheckDomainEvent>) {
+    super(props);
+    this.serviceCheckId = props.serviceCheckId;
+    this.type = props.type;
+  }
+}
+
+export class ExecuteScheduleServiceCheckDomainEvent extends DomainEvent {
+  readonly serviceCheckId: AggregateID;
+  readonly url: string;
+  readonly timeout: number;
+  readonly alertCheckThreshold: number;
+  readonly method: string;
+  readonly body: string;
+  readonly headers: { [key: string]: any };
+  constructor(props: DomainEventProps<ExecuteScheduleServiceCheckDomainEvent>) {
+    super(props);
+    this.serviceCheckId = props.serviceCheckId;
+    this.url = props.url;
+    this.timeout = props.timeout;
+    this.alertCheckThreshold = props.alertCheckThreshold;
+    this.method = props.method;
+    this.body = props.body;
+    this.headers = props.headers;
+  }
+}
+
+export class ExecuteScheduleServiceCheckCompleteDomainEvent extends DomainEvent {
+  readonly serviceCheckId: AggregateID;
+  readonly status: number;
+  readonly duration: number;
+  readonly response: string;
+  readonly alertCheckThreshold: number;
+  constructor(
+    props: DomainEventProps<ExecuteScheduleServiceCheckCompleteDomainEvent>,
+  ) {
+    super(props);
+    this.serviceCheckId = props.serviceCheckId;
+    this.status = props.status;
+    this.duration = props.duration;
+    this.response = props.response;
+    this.alertCheckThreshold = props.alertCheckThreshold;
+  }
+}
+
 export class ScheduleServiceCheckDomainEvent extends DomainEvent {
+  readonly ownerId: AggregateID;
+  readonly name: string;
   readonly serviceCheckId: AggregateID;
   readonly url: string;
   readonly interval: number;
@@ -20,11 +84,13 @@ export class ScheduleServiceCheckDomainEvent extends DomainEvent {
   readonly alertCheckThreshold: number;
   readonly method: string;
   readonly body: string;
-  readonly headers: { [key: string]: string }[];
+  readonly headers: { [key: string]: any };
   readonly status: string;
   readonly type: string;
   constructor(props: DomainEventProps<ScheduleServiceCheckDomainEvent>) {
     super(props);
+    this.ownerId = props.ownerId;
+    this.name = props.name;
     this.serviceCheckId = props.serviceCheckId;
     this.url = props.url;
     this.interval = props.interval;
@@ -47,7 +113,7 @@ export class ServiceCheckCreatedDomainEvent extends DomainEvent {
   readonly alertCheckThreshold: number;
   readonly method: string;
   readonly body: string;
-  readonly headers: { [key: string]: string }[];
+  readonly headers: { [key: string]: any };
   readonly status: string;
   readonly type: string;
   constructor(props: DomainEventProps<ServiceCheckCreatedDomainEvent>) {
@@ -86,11 +152,11 @@ export interface ServiceCheckProps {
   interval: number;
   timeout: number;
   alertCheckThreshold: number;
-  method: string;
+  method: ScheduleMethod;
   body: string;
-  headers: { [key: string]: string }[];
-  status: string;
-  type: string;
+  headers: { [key: string]: any };
+  status: ScheduleStatus;
+  type: ScheduleType;
 }
 
 // Properties that are needed for a ServiceCheck creation
@@ -120,10 +186,62 @@ export class ServiceCheckEntity extends AggregateRoot<ServiceCheckProps> {
     return serviceCheck;
   }
 
+  get ownerId() {
+    return this.props.ownerId;
+  }
+  get name() {
+    return this.props.name;
+  }
+  get url() {
+    return this.props.url;
+  }
+  get interval() {
+    return this.props.interval;
+  }
+  get timeout() {
+    return this.props.timeout;
+  }
+  get alertCheckThreshold() {
+    return this.props.alertCheckThreshold;
+  }
+  get method() {
+    return this.props.method;
+  }
+  get body() {
+    return this.props.body;
+  }
+  get headers() {
+    return this.props.headers;
+  }
+  get status() {
+    return this.props.status;
+  }
+  get type() {
+    return this.props.type;
+  }
+
+  updateStatus(status: ScheduleStatus) {
+    this.props.status = status;
+  }
+
   update(props: UpdateServiceCheckProps): void {
+    if (props.status) {
+      this.updateStatus(props.status);
+    }
+    this.setUpdatedAt(new Date());
     this.addEvent(
       new ServiceCheckUpdatedDomainEvent({
         aggregateId: this.id,
+      }),
+    );
+  }
+
+  execute(): void {
+    this.addEvent(
+      new ExecuteScheduleServiceCheckDomainEvent({
+        aggregateId: this.id,
+        serviceCheckId: this.id,
+        ...this.getProps(),
       }),
     );
   }
@@ -134,6 +252,16 @@ export class ServiceCheckEntity extends AggregateRoot<ServiceCheckProps> {
         aggregateId: this.id,
         serviceCheckId: this.id,
         ...this.getProps(),
+      }),
+    );
+  }
+
+  unSchedule(): void {
+    this.addEvent(
+      new UnScheduleServiceCheckDomainEvent({
+        aggregateId: this.id,
+        serviceCheckId: this.id,
+        type: this.type,
       }),
     );
   }

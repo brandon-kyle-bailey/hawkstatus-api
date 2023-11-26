@@ -7,8 +7,14 @@ import { AggregateID } from '@app/common/ddd/entity.base';
 import { AggregateRoot } from '@app/common/ddd/aggregate-root.base';
 
 export class IncidentCreatedDomainEvent extends DomainEvent {
+  serviceCheckId: AggregateID;
+  status: string;
+  createdAt: Date;
   constructor(props: DomainEventProps<IncidentCreatedDomainEvent>) {
     super(props);
+    this.serviceCheckId = props.serviceCheckId;
+    this.status = props.status;
+    this.createdAt = props.createdAt;
   }
 }
 

@@ -20,6 +20,17 @@ export class UserRepository implements UserRepositoryPort {
     protected readonly logger: Logger,
     private eventEmitter: EventEmitter2,
   ) {}
+
+  async findOneBy(filter: any): Promise<UserEntity> {
+    const result = await this.repo.findOne({
+      where: filter,
+    });
+    if (!result) {
+      return null;
+    }
+    const entity = this.mapper.toDomain(result);
+    return entity;
+  }
   async findOneByEmail(email: string): Promise<UserEntity> {
     const result = await this.repo.findOne({
       where: { email },

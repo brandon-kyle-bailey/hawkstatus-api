@@ -9,7 +9,7 @@ export class ServiceCheckResponseDto extends ResponseBase {
   alertCheckThreshold: number;
   method: string;
   body: string;
-  headers: { [key: string]: string }[];
+  headers: { [key: string]: any };
   status: string;
   type: string;
 }

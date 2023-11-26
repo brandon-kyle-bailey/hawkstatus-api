@@ -39,6 +39,16 @@ export class IncidentRepository implements IncidentRepositoryPort {
     const entity = this.mapper.toDomain(result);
     return entity;
   }
+  async findOneBy(filter: any): Promise<IncidentEntity> {
+    const result = await this.repo.findOne({
+      where: filter,
+    });
+    if (!result) {
+      return null;
+    }
+    const entity = this.mapper.toDomain(result);
+    return entity;
+  }
   async findAll(): Promise<IncidentEntity[]> {
     const result = await this.repo.find();
     if (!result) {

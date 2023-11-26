@@ -1,9 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import {
+  ScheduleMethod,
   ScheduleServiceCheckDomainEvent,
+  ScheduleStatus,
   ScheduleType,
+  ServiceCheckEntity,
 } from 'src/core/domain/entities/service-check.entity';
 
 @Injectable()
@@ -11,10 +14,14 @@ export class ScheduleServiceCheckService {
   constructor(
     protected readonly logger: Logger,
     protected readonly schedulerRegistry: SchedulerRegistry,
+    protected readonly eventEmitter: EventEmitter2,
   ) {}
 
-  @OnEvent(ScheduleServiceCheckDomainEvent.name)
-  handle(event: ScheduleServiceCheckDomainEvent): void {
+  @OnEvent(ScheduleServiceCheckDomainEvent.name, {
+    async: true,
+    promisify: true,
+  })
+  async handle(event: ScheduleServiceCheckDomainEvent): Promise<void> {
     this.logger.log(
       'ScheduleServiceCheckService.handle invoked with event',
       JSON.stringify(event),
@@ -32,6 +39,13 @@ export class ScheduleServiceCheckService {
       return;
     }
 
+    const serviceCheck = ServiceCheckEntity.create({
+      ...event,
+      method: event.method as ScheduleMethod,
+      status: event.status as ScheduleStatus,
+      type: event.type as ScheduleType,
+    });
+
     switch (event.type as ScheduleType) {
       case ScheduleType.Cron:
         this.logger.debug('Cron type not supported yet');
@@ -39,10 +53,10 @@ export class ScheduleServiceCheckService {
       case ScheduleType.Interval:
         this.schedulerRegistry.addInterval(
           event.serviceCheckId,
-          setInterval(() => {
+          setInterval(async () => {
             this.logger.debug('executing interval', event.serviceCheckId);
-            // emit domain event to execute service check
-            // this.service.emit(ScheduledTaskIntegrationEvents.RunTask, payload);
+            serviceCheck.execute();
+            serviceCheck.publishEvents(this.logger, this.eventEmitter);
           }, event.interval),
         );
         return;
@@ -51,8 +65,8 @@ export class ScheduleServiceCheckService {
           event.serviceCheckId,
           setTimeout(() => {
             this.logger.debug('executing timeout', event.serviceCheckId);
-            // emit domain event to execute service check
-            // this.service.emit(ScheduledTaskIntegrationEvents.RunTask, payload);
+            serviceCheck.execute();
+            serviceCheck.publishEvents(this.logger, this.eventEmitter);
           }, event.interval),
         );
         return;

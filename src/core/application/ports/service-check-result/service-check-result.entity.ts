@@ -13,6 +13,7 @@ export interface ServiceCheckResultEntityProps {
   status: number;
   duration: number;
   response: string;
+  incidentId?: AggregateID;
 }
 
 @Entity('servicecheckresult')
@@ -34,6 +35,9 @@ export class ServiceCheckResultRepositoryEntity {
 
   @Column('uuid')
   serviceCheckId: AggregateID;
+
+  @Column('uuid', { nullable: true })
+  incidentId: AggregateID;
 
   @Column()
   status: number;
