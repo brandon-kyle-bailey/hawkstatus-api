@@ -9,4 +9,6 @@ export class UserResponseDto extends ResponseBase {
   name: string;
   email: string;
   phone: string;
+  access_token?: string;
+  refresh_token?: string;
 }

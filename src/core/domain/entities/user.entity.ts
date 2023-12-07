@@ -6,6 +6,7 @@ import {
 } from '@app/common/ddd/domain-event.base';
 import { AggregateID } from '@app/common/ddd/entity.base';
 import { AggregateRoot } from '@app/common/ddd/aggregate-root.base';
+import { UserTokenValueObject } from '../value-objects/user-token.value-object';
 
 export class UserCreatedDomainEvent extends DomainEvent {
   readonly userId: AggregateID;
@@ -42,6 +43,7 @@ export interface UserProps {
   phone?: string;
   verified: boolean;
   password: string;
+  token?: UserTokenValueObject;
 }
 
 // Properties that are needed for a User creation
@@ -67,6 +69,10 @@ export class UserEntity extends AggregateRoot<UserProps> {
       }),
     );
     return user;
+  }
+
+  setToken(token: UserTokenValueObject) {
+    this.props.token = token;
   }
 
   get email() {

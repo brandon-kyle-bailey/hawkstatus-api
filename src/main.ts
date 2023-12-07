@@ -10,6 +10,7 @@ const {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   const logger = new Logger();
   const pickupServiceCheckCliController =
     app.get<PickupServiceCheckCliController>(PickupServiceCheckCliController);

@@ -20,7 +20,7 @@ export class SigninUserService implements ICommandHandler {
     private readonly repo: UserRepositoryPort,
     private readonly commandBus: CommandBus,
   ) {}
-  async execute(command: SigninUserCommand): Promise<UserTokenValueObject> {
+  async execute(command: SigninUserCommand): Promise<UserEntity> {
     try {
       const user = await this.repo.findOneByEmail(command.email);
       if (!user) {
@@ -42,7 +42,8 @@ export class SigninUserService implements ICommandHandler {
       const token: UserTokenValueObject = await this.commandBus.execute(
         CreateUserTokenCommand.create(payload),
       );
-      return token;
+      user.setToken(token);
+      return user;
     } catch (error) {
       this.logger.error(
         'SigninUserService.execute encountered an error',
