@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Body, Controller, Get, Logger, Req, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { AuthGuard } from 'src/core/application/services/auth/auth.guard';
@@ -21,9 +22,12 @@ export class ListServiceCheckController {
     @Req() request: any,
   ): Promise<ServiceCheckResponseDto[]> {
     try {
-      const query = ListServiceCheckQuery.create({});
+      const query = ListServiceCheckQuery.create({
+        ownerId: request.user.sub,
+      });
       const result = await this.queryBus.execute(query);
-      const response = result.map((res) => this.mapper.toResponse(res));
+      this.logger.debug('paginated list service checks result', result);
+      const response = result.data.map((res) => this.mapper.toResponse(res));
       return response;
     } catch (error) {
       this.logger.error(

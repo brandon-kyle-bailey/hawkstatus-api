@@ -45,7 +45,7 @@ export class ServiceCheckRepository implements ServiceCheckRepositoryPort {
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async insert(entity: ServiceCheckEntity): Promise<void> {
-    const result = await this.repo.insert(this.mapper.toPersistence(entity));
+    await this.repo.insert(this.mapper.toPersistence(entity));
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async findOneById(id: string): Promise<ServiceCheckEntity> {
@@ -71,6 +71,7 @@ export class ServiceCheckRepository implements ServiceCheckRepositoryPort {
     const result = await this.repo.find({
       skip: params.offset,
       take: params.limit,
+      where: params.filter,
       order: { [String(params.orderBy.field)]: params.orderBy.param },
     });
     if (!result) {

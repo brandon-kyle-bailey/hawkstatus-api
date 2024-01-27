@@ -26,7 +26,7 @@ export class IncidentRepository implements IncidentRepositoryPort {
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async insert(entity: IncidentEntity): Promise<void> {
-    const result = await this.repo.insert(this.mapper.toPersistence(entity));
+    await this.repo.insert(this.mapper.toPersistence(entity));
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async findOneById(id: string): Promise<IncidentEntity> {
@@ -62,6 +62,7 @@ export class IncidentRepository implements IncidentRepositoryPort {
     const result = await this.repo.find({
       skip: params.offset,
       take: params.limit,
+      where: params.filter,
       order: { [String(params.orderBy.field)]: params.orderBy.param },
     });
     if (!result) {

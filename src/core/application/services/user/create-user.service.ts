@@ -35,6 +35,7 @@ export class CreateUserService implements ICommandHandler {
         'CreateUserService.execute encountered an error',
         error,
       );
+      throw new Error(error);
     }
   }
 }

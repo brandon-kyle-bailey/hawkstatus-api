@@ -26,7 +26,7 @@ export class CreateServiceCheckService implements ICommandHandler {
         name: command.name,
         url: command.url,
         interval: command.interval,
-        timeout: command.timeout,
+        timeout: command.timeout || 0,
         alertCheckThreshold: command.alertCheckThreshold,
         method: command.method as ScheduleMethod,
         body: command.body,

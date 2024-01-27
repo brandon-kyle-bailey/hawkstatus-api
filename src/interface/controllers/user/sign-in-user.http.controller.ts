@@ -1,12 +1,15 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
 import {
-  UserResponseDto,
-  UserTokenResponseDto,
-} from '../../dtos/user/user.response.dto';
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Logger,
+  Post,
+} from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
+import { UserResponseDto } from '../../dtos/user/user.response.dto';
 import { SigninUserRequestDto } from '../../dtos/user/signin-user.request.dto';
 import { SigninUserCommand } from '../../commands/user/signin-user.command';
-import { UserTokenValueObject } from 'src/core/domain/value-objects/user-token.value-object';
 import { UserMapper } from 'src/infrastructure/mappers/user.mapper';
 import { UserEntity } from 'src/core/domain/entities/user.entity';
 
@@ -29,6 +32,7 @@ export class SigninUserController {
         'SigninUserController.signin encountered an error',
         error,
       );
+      throw new HttpException(`${error}`, HttpStatus.BAD_REQUEST);
     }
   }
 }

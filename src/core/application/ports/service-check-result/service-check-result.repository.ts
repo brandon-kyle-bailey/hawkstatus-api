@@ -37,7 +37,7 @@ export class ServiceCheckResultRepository
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async insert(entity: ServiceCheckResultEntity): Promise<void> {
-    const result = await this.repo.insert(this.mapper.toPersistence(entity));
+    await this.repo.insert(this.mapper.toPersistence(entity));
     return await entity.publishEvents(this.logger, this.eventEmitter);
   }
   async findOneById(id: string): Promise<ServiceCheckResultEntity> {

@@ -1,1 +1,3 @@
-export class ListIncidentRequestDto {}
+export class ListIncidentRequestDto {
+  readonly serviceCheckId: string;
+}

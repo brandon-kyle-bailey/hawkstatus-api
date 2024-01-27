@@ -17,6 +17,7 @@ export class PickupServiceCheckService implements ICommandHandler {
     protected readonly repo: ServiceCheckRepositoryPort,
     protected readonly eventEmitter: EventEmitter2,
   ) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async execute(command: PickupServiceCheckCommand): Promise<void> {
     try {
       this.logger.debug('PickupSchedulesService.execute called');

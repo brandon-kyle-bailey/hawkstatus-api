@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Logger, Req, UseGuards } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Controller, Get, Logger, Query, Req, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { AuthGuard } from 'src/core/application/services/auth/auth.guard';
 import { IncidentMapper } from 'src/infrastructure/mappers/incident.mapper';
@@ -17,13 +18,15 @@ export class ListIncidentController {
   @UseGuards(AuthGuard)
   @Get('incident/list')
   async get(
-    @Body() body: ListIncidentRequestDto,
+    @Query() body: ListIncidentRequestDto,
     @Req() request: any,
   ): Promise<IncidentResponseDto[]> {
     try {
-      const query = ListIncidentQuery.create({});
+      const query = ListIncidentQuery.create({
+        serviceCheckId: body.serviceCheckId,
+      });
       const result = await this.queryBus.execute(query);
-      const response = result.map((res) => this.mapper.toResponse(res));
+      const response = result.data.map((res) => this.mapper.toResponse(res));
       return response;
     } catch (error) {
       this.logger.error(

@@ -59,6 +59,7 @@ export class IncidentEntity extends AggregateRoot<IncidentProps> {
     return incident;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(props: UpdateIncidentProps): void {
     this.addEvent(
       new IncidentUpdatedDomainEvent({

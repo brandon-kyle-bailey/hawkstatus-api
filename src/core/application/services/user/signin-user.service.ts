@@ -49,6 +49,7 @@ export class SigninUserService implements ICommandHandler {
         'SigninUserService.execute encountered an error',
         error,
       );
+      throw new Error(error);
     }
   }
 }
