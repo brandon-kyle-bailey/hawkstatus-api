@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, Query, Req, UseGuards } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { AuthGuard } from 'src/core/application/services/auth/auth.guard';
 import { ServiceCheckMapper } from 'src/infrastructure/mappers/servce-check.mapper';
@@ -17,7 +17,8 @@ export class GetServiceCheckController {
   @UseGuards(AuthGuard)
   @Get('service-check')
   async get(
-    @Body() body: GetServiceCheckRequestDto,
+    @Query() body: GetServiceCheckRequestDto,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Req() request: any,
   ): Promise<ServiceCheckResponseDto> {
     try {

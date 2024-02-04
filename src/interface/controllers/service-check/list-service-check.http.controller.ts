@@ -17,10 +17,7 @@ export class ListServiceCheckController {
 
   @UseGuards(AuthGuard)
   @Get('service-check/list')
-  async get(
-    @Body() body: ListServiceCheckRequestDto,
-    @Req() request: any,
-  ): Promise<ServiceCheckResponseDto[]> {
+  async get(@Req() request: any): Promise<ServiceCheckResponseDto[]> {
     try {
       const query = ListServiceCheckQuery.create({
         ownerId: request.user.sub,
