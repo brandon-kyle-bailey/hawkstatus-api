@@ -8,7 +8,7 @@ export default () => ({
     secret: process.env.ACCESS_TOKEN_SECRET,
     access_token_refresh: process.env.ACCESS_TOKEN_REFRESH,
     refresh_token_refresh: process.env.REFRESH_TOKEN_REFRESH,
-    client_url: process.env.CLIENT_URL
+    client_url: process.env.CLIENT_URL,
   },
   smtp: {
     host: process.env.SMTP_HOST,
